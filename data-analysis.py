@@ -63,17 +63,10 @@ for index, row in pinkBlogs.iterrows():
     if row['post-id'] not in idsToAnalyze:
         idsToAnalyze.append(row['post-id'])
 
-
-
-# These are the blogs that will serve as our baseline
-# nonPinkBlogs = df[df['contains_pink'] == 0]
-
 pinkBlogs['SA'] = np.array([analyze_sentiment(post)
                             for post in pinkBlogs['Post']])
 
 pinkBlogs['Polarity'] = [retrieve_polarity(post) for post in pinkBlogs['Post']]
-
-
 
 pinkBlogs.to_csv("Pink-Blogs.csv")
 
@@ -93,3 +86,33 @@ print("Percentage of positive posts: {}%".format(pos_thoughts*100/len(pinkBlogs[
 print("Percentage of neutral posts: {}%".format(neu_thoughts*100/len(pinkBlogs['Post'])))
 print("Percentage of negative posts: {}%".format(neg_thoughts*100/len(pinkBlogs['Post'])))
 
+# These are the blogs that will serve as our baseline
+nonPinkBlogs = df[df['contains_pink'] == 0]
+
+# Only keep the blogs that discuss Pink
+nonPinkBlogs = nonPinkBlogs[nonPinkBlogs['post-id'].isin(idsToAnalyze)]
+
+nonPinkBlogs['SA'] = np.array([analyze_sentiment(post)
+                            for post in nonPinkBlogs['Post']])
+
+nonPinkBlogs['Polarity'] = [retrieve_polarity(post) for post in nonPinkBlogs['Post']]
+
+nonPinkBlogs.to_csv("Non-Pink-Blogs.csv")
+
+pos_thoughts = 0
+neu_thoughts = 0
+neg_thoughts = 0
+
+for index, row in nonPinkBlogs.iterrows():
+    if row['SA'] > 0:
+        pos_thoughts += 1
+    if row['SA'] == 0:
+        neu_thoughts += 1
+    if row['SA'] < 0:
+        neg_thoughts += 1
+
+print("################################")
+
+print("Percentage of positive posts: {}%".format(pos_thoughts*100/len(nonPinkBlogs['Post'])))
+print("Percentage of neutral posts: {}%".format(neu_thoughts*100/len(nonPinkBlogs['Post'])))
+print("Percentage of negative posts: {}%".format(neg_thoughts*100/len(nonPinkBlogs['Post'])))
