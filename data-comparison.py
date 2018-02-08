@@ -48,17 +48,14 @@ meanPolarityByID = nonPinkBlogs.groupby(['post-id']).mean()
 for index, row in meanPolarityByID.iterrows():
     pinkBlogs.loc[pinkBlogs['post-id'] == index, 'polarity-baseline'] = row['Polarity']
 
-pinkBlogs['polarity-difference'] =  pinkBlogs['polarity-baseline'] - pinkBlogs['Polarity']
-pinkBlogs['polarity-delta'] = (pinkBlogs['polarity-difference'] / pinkBlogs['Polarity']) * 100
+pinkBlogs['polarity-difference'] =  pinkBlogs['Polarity'] - pinkBlogs['polarity-baseline'] 
+pinkBlogs['polarity-delta'] = (pinkBlogs['polarity-difference'] / pinkBlogs['polarity-baseline']) * 100
 
 pinkBlogs.Polarity = pinkBlogs.Polarity.round(4)
 pinkBlogs['polarity-baseline'] = pinkBlogs['polarity-baseline'].round(4)
 pinkBlogs['polarity-difference'] = pinkBlogs['polarity-difference'].round(4)
 pinkBlogs['polarity-delta'] = pinkBlogs['polarity-delta'].round(2)
 
-s = pinkBlogs.style.applymap(color_negative_red)
-s
-
-#print(pinkBlogs)
+print(pinkBlogs)
 
 pinkBlogs.to_csv("Polarity-Analysis.csv")
