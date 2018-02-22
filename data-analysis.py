@@ -63,6 +63,8 @@ for index, row in pinkBlogs.iterrows():
     if row['post-id'] not in idsToAnalyze:
         idsToAnalyze.append(row['post-id'])
 
+print(idsToAnalyze)
+
 pinkBlogs['SA'] = np.array([analyze_sentiment(post)
                             for post in pinkBlogs['Post']])
 
