@@ -22,7 +22,7 @@ pinkCols = pinkBlogs.columns.tolist()
 
 pinkCols.remove('contains_pink')
 pinkCols.remove('SA')
-pinkCols.remove('Date')
+pinkCols.remove('date')
 pinkCols.remove('Unnamed: 0')
 
 pinkBlogs = pinkBlogs[pinkCols]
@@ -31,8 +31,8 @@ pinkBlogs = pinkBlogs[pinkCols]
 nonPinkCols = nonPinkBlogs.columns.tolist()
 
 
-nonPinkCols.remove('Date') 
-nonPinkCols.remove('Post')
+nonPinkCols.remove('date') 
+nonPinkCols.remove('post')
 nonPinkCols.remove('contains_pink')
 nonPinkCols.remove('SA')
 nonPinkCols.remove('Unnamed: 0')
@@ -56,6 +56,20 @@ pinkBlogs['polarity-baseline'] = pinkBlogs['polarity-baseline'].round(4)
 pinkBlogs['polarity-difference'] = pinkBlogs['polarity-difference'].round(4)
 pinkBlogs['polarity-delta'] = pinkBlogs['polarity-delta'].round(2)
 
-print(pinkBlogs)
+
+
+pinkBlogs = pinkBlogs.sort_values(by=['post-id','post-no'], ascending=True)
+
+
 
 pinkBlogs.to_csv("Polarity-Analysis.csv")
+
+pinkBlogsPolarity = pinkBlogs.sort_values(by='Polarity', ascending=False)
+
+pinkBlogsPolarity.to_csv("Polarity-Analysis-By-Polarity.csv")
+
+pinkBlogsDateAnalysis = pinkBlogs.sort_values(by=['year', 'month', 'day'], ascending=True)
+
+pinkBlogsDateAnalysis.to_csv("Polarity-Analysis-Year.csv")
+
+

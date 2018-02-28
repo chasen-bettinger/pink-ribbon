@@ -5,16 +5,16 @@ from textblob import TextBlob
 
 df = pd.read_csv("Cleaned-Text.csv")
 
-df['post-id'], df['post-no'] = df['ID'].str.split('-', 1).str
+df['post-id'], df['post-no'] = df['id'].str.split('-', 1).str
 cols = df.columns.tolist()
 
-a, b = cols.index('post-id'), cols.index('Date')
+a, b = cols.index('post-id'), cols.index('date')
 cols[b], cols[a] = cols[a], cols[b]
 
-a, b = cols.index('post-no'), cols.index('Post')
+a, b = cols.index('post-no'), cols.index('post')
 cols[b], cols[a] = cols[a], cols[b]
 
-cols.remove('ID')
+cols.remove('id')
 
 df = df[cols]
 
@@ -51,7 +51,7 @@ def retrieve_polarity(post):
 #######################################################
 
 # Create a column evaluating if the post contains Pink
-df['contains_pink'] = df.Post.apply(lambda x: checkPink(x))
+df['contains_pink'] = df.post.apply(lambda x: checkPink(x))
 
 # These are the target blogs we want to analyze
 pinkBlogs = df[df['contains_pink'] == 1]
@@ -66,9 +66,9 @@ for index, row in pinkBlogs.iterrows():
 print(idsToAnalyze)
 
 pinkBlogs['SA'] = np.array([analyze_sentiment(post)
-                            for post in pinkBlogs['Post']])
+                            for post in pinkBlogs['post']])
 
-pinkBlogs['Polarity'] = [retrieve_polarity(post) for post in pinkBlogs['Post']]
+pinkBlogs['Polarity'] = [retrieve_polarity(post) for post in pinkBlogs['post']]
 
 pinkBlogs.to_csv("Pink-Blogs.csv")
 
@@ -84,9 +84,9 @@ for index, row in pinkBlogs.iterrows():
     if row['SA'] < 0:
         neg_thoughts += 1
 
-print("Percentage of positive posts: {}%".format(pos_thoughts*100/len(pinkBlogs['Post'])))
-print("Percentage of neutral posts: {}%".format(neu_thoughts*100/len(pinkBlogs['Post'])))
-print("Percentage of negative posts: {}%".format(neg_thoughts*100/len(pinkBlogs['Post'])))
+print("Percentage of positive posts: {}%".format(pos_thoughts*100/len(pinkBlogs['post'])))
+print("Percentage of neutral posts: {}%".format(neu_thoughts*100/len(pinkBlogs['post'])))
+print("Percentage of negative posts: {}%".format(neg_thoughts*100/len(pinkBlogs['post'])))
 
 # These are the blogs that will serve as our baseline
 nonPinkBlogs = df[df['contains_pink'] == 0]
@@ -95,9 +95,9 @@ nonPinkBlogs = df[df['contains_pink'] == 0]
 nonPinkBlogs = nonPinkBlogs[nonPinkBlogs['post-id'].isin(idsToAnalyze)]
 
 nonPinkBlogs['SA'] = np.array([analyze_sentiment(post)
-                            for post in nonPinkBlogs['Post']])
+                            for post in nonPinkBlogs['post']])
 
-nonPinkBlogs['Polarity'] = [retrieve_polarity(post) for post in nonPinkBlogs['Post']]
+nonPinkBlogs['Polarity'] = [retrieve_polarity(post) for post in nonPinkBlogs['post']]
 
 nonPinkBlogs.to_csv("Non-Pink-Blogs.csv")
 
@@ -115,6 +115,6 @@ for index, row in nonPinkBlogs.iterrows():
 
 print("################################")
 
-print("Percentage of positive posts: {}%".format(pos_thoughts*100/len(nonPinkBlogs['Post'])))
-print("Percentage of neutral posts: {}%".format(neu_thoughts*100/len(nonPinkBlogs['Post'])))
-print("Percentage of negative posts: {}%".format(neg_thoughts*100/len(nonPinkBlogs['Post'])))
+print("Percentage of positive posts: {}%".format(pos_thoughts*100/len(nonPinkBlogs['post'])))
+print("Percentage of neutral posts: {}%".format(neu_thoughts*100/len(nonPinkBlogs['post'])))
+print("Percentage of negative posts: {}%".format(neg_thoughts*100/len(nonPinkBlogs['post'])))
